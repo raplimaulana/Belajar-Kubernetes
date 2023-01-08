@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata: 
+  name: nginx service           #service-name
+  labels:
+    label1: label               
+spec:
+  type: NodePort
+  elector: 
+    label1: label               #label service harus sama dengan label-template (label pod)
+  ports:
+    - port: 80                  #port yang digunakan oleh cluster lain (dalam satu server kubernetes) untuk mengakses aplikasi tersebut
+      targetPort: 80            #port aplikasi yang ada di server
+      nodePort: 32767           #port yang digunakan oleh client untuk mengakses aplikasi tersebut

@@ -1,0 +1,66 @@
+##membuat pod
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodejs-web
+  labels:
+    name: nodejs-web
+spec:                                           #tidak membutuhkan set replicas, karena nanti akan didefinisikan oleh HPA
+  selector:
+    matchLabels:
+      name: nodejs-web                          #pastikan matchLabels HARUS SAMA dengan label-template
+  template:
+    metadata:
+      name: nodejs-web
+      labels:
+        name: nodejs-web                        #label-template (label pod) haru sama dengan matchLabels dan label service
+    spec: 
+      containers:
+        - name: nodejs-web
+          image: khannedy/nodejs-web:1
+          ports:
+            - containerPort: 3000
+
+---
+
+##membuat service
+apiVersion: v1
+kind: Service
+metadata: 
+  name: nodejs-web-service
+spec:
+  type: NodePort
+  selector:
+    name: nodejs-web                                #label service harus sama dengan label-template (label pod)
+  ports:
+    - port: 3000                                    #port yang digunakan oleh cluster lain (dalam satu server kubernetes) untuk mengakses aplikasi tersebut               
+      targetPort: 3000                              #port aplikasi yang ada di server
+      nodePort: 30001                               #port yang digunakan oleh client untuk mengakses aplikasi tersebut
+
+---
+
+##membuat HPA
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata: 
+  name: hpa-name                                     #hpa-name
+spec:
+  minReplicas: 3                                     #jika pada saat deployment men-setting replicas=5, namun minReplicas = 3, maka pod yang akan dibuat tetap akan mengikuti minReplicas HPA yakni 3 pod saja 
+  maxReplicas: 5                                     #maksimal pod yang ditambahkan adalah menjadi total 5 pod, bukan ditambahkan 5 pod
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: nodejs-web                                 #deployment-name     #menargetkan ke nama deployment yang akan/telah dibuat
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target: 
+          type: Utilization
+          averageUtilization: 70                      #jika rata-rata penggunaannya cpunya melebihi 70%, maka pod baru akan dibuat secara otomatis
+    - type: Resource
+      resource:
+        name: memory                                  #pastikan bahasa pemrograman yang digunakan dapat me-manage memori dengan baik. Contohnya jika menggunakan java, memory-nya tidak akan pernah bisa turun.
+        target: 
+          type: Utilization
+          averageUtilization: 70                      #jika rata-rata penggunaannya RAM melebihi 70%, maka pod baru akan dibuat secara otomatis

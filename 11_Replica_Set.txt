@@ -1,0 +1,34 @@
+### REPLICA SET ###
+
+Apa itu Replica Set?
+
+Pada awalnya Replication Controller digunakan untuk menjaga jumlah replica Pod dan me-reschedule ulang Pod yang mati.
+Namun sekarang, telah dikenalkan resource baru yang bernama Replica Set.
+Replica Set adalah generasi baru dari Replication Controller, dan digunakan sebagai pengganti Replication Controller.
+Replication Controller sendiri penggunaannya sekarang sudah tidak direkomendasikan.
+
+Replica Set vs Replication Controller
+
+Replica Set memiliki kemampuan hampir mirip dengan Replication Controller
+Namun Replica Set memiliki label selector yang lebih expressive dibandingkan Replication Controller yang hanya memiliki fitur label selector secara match
+
+##membuat Replica Set
+@file ada di Templates/11_Replica Set/replica-set.yaml
+
+kubectl create -f replica-set.yaml
+
+##melihat Replication Set
+kubectl get rs
+kubectl get replicaset 
+kubectl get replicasets
+
+##menghapus Replication Set
+Saat kita menghapus Replication Set, maka secara otomatis Pod yang berada pada label selectornya akan ikut terhapus.
+Jika kita ingin menghapus Replication Set, tanpa menghapus Pod yang berada pada label selectornya, kita bisa tambahkan opsi --cascade=false
+
+kubectl delete rs namarc
+kubectl delete rs nginx-rc
+
+kubectl delete rs namarc --cascade=false
+kubectl delete rs nginx-rc --cascade=false
+

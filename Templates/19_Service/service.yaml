@@ -1,0 +1,12 @@
+apiversion: v1
+kind: Service
+metadata:
+  name: nginx-service    #service-name
+spec:
+  selector: 
+    label1: label        #label Service harus sama dengan label pod
+  ports:
+    - port: 8080         #port yang digunakan oleh cluster lain (dalam satu server kubernetes) untuk mengakses aplikasi tersebut
+      targetPort: 80     #port aplikasi yang ada di server
+
+---

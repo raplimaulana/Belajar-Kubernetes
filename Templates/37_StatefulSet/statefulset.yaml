@@ -1,0 +1,42 @@
+##membuat statefulset
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: nodejs-stateful                                    #name-stateful
+  labels:
+    name: nodejs-stateful
+spec:
+# https://github.com/kubernetes/kubernetes/issues/69608
+  serviceName: nodejs-stateful-srvice                      #name-stateful-service
+  replicas: 3
+  selector:
+    matchLabels:
+      name: nodejs-stateful                                #pastikan matchLabels HARUS SAMA dengan label-template
+  volumeClaimTemplates:
+    - metadata: 
+        name: nodejs-stateful-volume-claim                 #name-stateful-volume-claim
+      spec: 
+        accessModes:
+          - ReadWriteOnce
+        volumeMode: Filesystem
+        resources:
+          requests:
+            storage: 1Gi                                   #artinya setiap pod akan punya satu 1 GB claim (total 3 GB akan dialokasikan) 
+  template: 
+    metadata:
+      name: nodejs-stateful                                #name-template
+      labels:
+        name: nodejs-stateful                              #label-template (label pod) haru sama dengan matchLabels dan label service
+    spec:
+      containers:
+        - name: nodejs-stateful                            #name-pod
+          image: khannedy/nodejs-stateful
+          env: 
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          volumeMounts:
+            - mountPath: /app/data
+              name: nodejs-stateful-volume-claim            #nama persisistent volume claim yang dibuat sebelumnya
+      

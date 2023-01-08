@@ -1,0 +1,42 @@
+### DOWNGUARD API ###
+Konfigurasi yang bisa kita set secara manual bisa ditangani dengan baik menggunakan ConfigMap dan Secret, namun bagaimana dengan konfigurasi yang dinamis? Seperti informasi Pod dan Node?
+Kubernetes memiliki Downward API. Downward API bisa memungkinkan kita mengambil informasi seputar Pod dan Node melalui environment variable.
+Jangan bingung dengan kata API, Downward API sendiri bukan RESTful API, ini hanya cara untuk mendapatkan informasi seputar Pod dan Node.
+Downward API = cara untuk mendapatkan informasi seputar Pod dan Node.
+
+Metadata 
+
+|-------------------------------|------------------------------| 
+|           Metadata            |          Keterangan          |
+|-------------------------------|-------------------------------| 
+| requests.cpu                  | Jumlah CPU yang di request    |
+|-------------------------------|-------------------------------| 
+| requests.memory               | Jumlah Memory yang di request |
+|-------------------------------|-------------------------------|
+| limits.cpu                    | Jumlah limit maksimal CPU     |
+|-------------------------------|-------------------------------|
+| limits.memory                 | Jumlah limit maksimal Memory  |
+|-------------------------------|-------------------------------|
+| metadata.name                 | Nama pod                      |       
+|-------------------------------|-------------------------------|
+| metadata.namespace            | Namespace pod                 |
+|-------------------------------|-------------------------------|
+| metadata.uid                  | Id pod                        |
+|-------------------------------|-------------------------------|
+| metadata.labels[‘<KEY>’]      | Label pod                     |
+|-------------------------------|-------------------------------|
+| metadata.annotations[‘<KEY>’] | Annotation pod                |
+|-------------------------------|-------------------------------|
+| status.podIP                  | IP address pod                |
+|-------------------------------|-------------------------------|
+| spec.serviceAccountName       | Nama service account pod      |   
+|-------------------------------|-------------------------------|
+| spec.nodeName                 | Nama node                     |
+|-------------------------------|-------------------------------|
+| status.hostIP                 | IP address node               |
+|-------------------------------|-------------------------------|
+
+##membuat Downward API
+@file ada Templates/32_Downward API/downward-api.yaml
+
+kubectl create -f downward-api.yaml

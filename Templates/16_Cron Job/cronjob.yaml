@@ -1,0 +1,25 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata: 
+  name: nodejs-cronjob                     #cron-job-name
+  labels:
+    name: nodejs-cronjob
+spec: 
+  schedule: "* * * * *"                    #melakukan schedule setiap menit akan menjalankan job
+  jobTemplate:
+    spec: 
+      #selector:
+        #matchLabels:                      #pastikan matchExpressions HARUS SAMA dengan label-template
+          #label1: label
+      template: 
+        metadata:
+          name: nodejs-cronjob             #pod-name
+          labels:
+            name: nodejs-cronjob           #label-template
+        spec: 
+          restartPolicy: Never
+          containers:
+            - name: nodejs-cronjob         #container-name
+              image: khannedy/nodejs-job   #image-name
+              #ports:
+                #- containerPort: 80

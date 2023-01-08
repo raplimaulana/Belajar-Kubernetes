@@ -1,0 +1,48 @@
+##membuat pod
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata: 
+  name: nginx
+spec: 
+  replicas: 3
+  selector:
+    matchLabels: 
+      name: nginx                           #pastikan matchLabels HARUS SAMA dengan label-template
+  template: 
+    metadata:
+      name: nginx
+      labels:
+        name: nginx                         #label-template (label pod) haru sama dengan matchLabels dan label service
+    spec:
+      volumes:
+        - name: html
+          emptyDir: {}
+      containers: 
+        - name: nodejs-writer
+          image: khannedy/nodejs-writer
+          volumeMounts:
+            - mountPath: /app/html
+              name: html
+        - name: nginx
+          image: nginx
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - mountPath: /usr/share/nginx/html
+              name: html
+
+---
+
+##membuat service
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  type: NodePort
+  selector:
+    name: nginx                               #label service harus sama dengan label-template (label pod)
+  ports:
+    - port: 8080                              #port yang digunakan oleh cluster lain (dalam satu server kubernetes) untuk mengakses aplikasi tersebut
+      targetPort: 80                          #port aplikasi yang ada di server
+      nodePort: 30001                         #port yang digunakan oleh client untuk mengakses aplikasi tersebut

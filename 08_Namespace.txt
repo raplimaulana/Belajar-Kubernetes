@@ -1,0 +1,43 @@
+### NAMESPACE ###
+Nama Pod tidak boleh sama, lalu bagaimana jika ada beberapa tim yang mengunakan aplikasi dan reource yang sama namun berbeda tujuan penggunaannya.
+Misal aplikasi nginx di development, production, QA pasti namanya nginx juga.
+Sehingga kita dapat mengunakan nama Pod yang sama, dengan syarat dalam Namespace yang berbeda.
+Namespace sama seperti groupping.
+Misal satu Namespace untuk satu tim di perusahaan.
+
+Kapan Menggunakan Namespace?
+•   Ketika resources di Kubernetes sudah terlalu banyak.
+•   Ketika butuh memisahkan resources untuk multi-tenant, team atau environment.
+•   Nama resources bisa sama jika berapa di namespace yang berbeda.
+
+Yang Perlu Diketahui Tentang Namespace
+•   Pod dengan nama yang sama boleh berjalan asalkan di Namespace yang berbeda.
+•   Namespace bukanlah cara untuk mengisolasi resource.
+•   Walaupun berbeda namespace, pod akan tetap bisa saling berkomunikasi dengan pod lain di namespace yang berbeda.
+
+##melihat Namespace
+kubectl get ns
+kubectl get namespace
+kubectl get namespaces
+
+##melihat Pod di Namespace tertentu
+kubectl get pod --namespace namanamespace
+kubectl get pod --namespace kube-system
+
+kubectl get pod -n namanamespace
+kubectl get pod -n kube-system
+
+##membuat Namespace
+@file ada di Templates/08_Namespace/namespace.yaml
+
+kubectl create -f namespace.yaml
+
+##membuat pod di Namespace tertentu
+@file ada Templates/05_Pod/pod.yaml
+
+kubectl create -f pod.yaml --namespace finance                 #finance = nama Namespace
+
+##menghapus namespace
+kubectl delete namespace finance
+
+*jika kita menghapus namespace, semua resource di dalam namespace itu akan ikut terhapus. Termasuk Pod.

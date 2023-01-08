@@ -1,0 +1,29 @@
+### ESTERNAL SERVICE ###
+
+Apa itu External Service?
+
+Biasanya Service digunakan sebagai gateway untuk internal Pod.
+Tapi Service juga bisa digunakan sebagai gateway untuk aplikasi eksternal yang berada diluar kubernetes cluster.
+
+##melihat Service Endpoint
+kubecl get endpoints namaservice
+
+atau
+
+kubectl describe service namaservice
+
+*endpoint = IP address
+
+##membuat External Service
+•   Menggunakan IP address.
+    @file ada Templates/20_Mengakses Service/service-with-endpoint.yaml
+
+    kubectl create -f service-with-endpoint.yaml
+
+•   Menggunakan DNS.
+    @file ada Templates/20_Mengakses Service/service-with-domain.yaml
+
+    kubectl create -f service-with-domain
+
+    *Jika menggunakan DNS, maka tidak akan ada endpoint pod. karena sebagai ganti menggunakan IP address, Service akan menggunakan DNS.
+

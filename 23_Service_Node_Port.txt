@@ -1,0 +1,17 @@
+### NODE PORT ###
+
+##membuat Service Node Port
+@file ada di Templates/23_Service Node Port/service-with-nodeport.yaml
+@file ada di Templates/23_Service Node Port/service-nginx-nodeport.yaml
+
+kubectl create -f service-nginx-nodeport.yml
+
+##melihat NodePort di Minikube
+minikube service namaservice
+minikube service nginx-service 
+
+*nanti akan menampilkan nama service beserta URL
+
+##akses server via web
+http://192.168.99.104:30001
+

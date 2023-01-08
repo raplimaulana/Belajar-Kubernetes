@@ -1,0 +1,12 @@
+### SHARING VOLUME ###
+Karena di dalam Pod kita bisa membuat lebih dari satu container.
+Maka, Volume di Pod pun bisa kita sharing ke beberapa container.
+Hal ini sangat cocok ketika kita butuh sharing direktori antar container, misal container pertama membuat file, container kedua memproses file.
+
+##membuat Sharing Volume dengan emptyDir (tidak cocok digunakan di production, karena pada saat Pod mati kemudaian hidup kembali, Volumenya akan kosong lagi)
+@file ada Templates/28_Sharing Volume/sharing-volume.yaml
+
+kubectl 
+
+
+

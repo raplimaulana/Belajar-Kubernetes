@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata: 
+  name: nginx-ingress                        #ingress-name
+  labels:
+    label1: label
+spec:
+  rules:
+    - host: sub.domain.com
+      http:
+        paths:
+          - path: /                          #setiap akses web, semuanya akan di forward ke service ini. Misal raplima.com/checkout, raplima.com/account, dll.
+            pathType: Prefix
+            backend:
+              service:
+                name: nginx-service          #nama service yang dibuat untuk mengakses pod yang ada di cluster kubernetes
+                port:
+                  number: 80

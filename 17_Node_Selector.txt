@@ -1,0 +1,20 @@
+### NODE SELECTOR ###
+
+Kenapa Butuh Node Selector?
+
+Kadang kita membuat Node dengan spesifikasi berbeda dari Node biasanya.
+Misal Node yang memiliki GPU, atau dengan hardisk SSD.
+Dengan Node Selector, kita bisa meminta Kubernetes untuk menjalankan Pod pada Node tertentu.
+
+##Menambahkan Label ke Node
+kubectl label node namanode key=value
+kubectl label node docker-dekstop gpu=true
+
+##Template Node Selector
+@file ada di Templates/17_Node Selector/pod-node-selector.yaml
+@file ada di Templates/17_Node Selector/job-node-selector.yaml
+@file ada di Templates/17_Node Selector/daemon-set-node-selector.yaml
+@file ada di Templates/17_Node Selector/cronjob-node-selector.yaml
+@file ada di Templates/17_Node Selector/replica-set-node-selector.yaml
+
+

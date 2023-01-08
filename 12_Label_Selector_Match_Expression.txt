@@ -1,0 +1,17 @@
+### LABEL SELECTOR MATCH EXPRESSION ###
+
+Match Expression
+
+Sebelumnya, jika diperhatikan, untuk selector di Replication Set kita menggunakan matchLabels, yang artinya selector tersebut cara kerjanya match (sama seperti di ReplicationController).
+Selain menggunakan matchLabels, operasi lain yang bisa digunakan pada selector di Replication Set adalah menggunakan matchExpression.
+
+Operasi di Match Expresion:
+•   In, value label harus ada di value in
+•   NotIn, value label tidak boleh ada di value in
+•   Exists, label harus ada
+•   NotExists, label tidak boleh ada
+
+##membuat Replica Set
+@file ada di Templates/12_Label Selector Match Expression/replica-set-match-expression.yaml
+
+kubectl create -f replica-set-match-expression.yaml

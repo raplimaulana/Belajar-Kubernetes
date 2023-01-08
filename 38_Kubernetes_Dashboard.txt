@@ -1,0 +1,15 @@
+### KUBERNETES DASHBOARD ###
+Sebelumnya kita selalu menggunakan terminal untuk manage object di Kubernetes.
+Di kenyataannya mungkin nanti kita akan menggunakan Cloud Provide untuk manage object di Kubernetes. Dimana Cloud Provider sudah menyediakan web user interface untuk manage object Kubernetesnya.
+Atau jika kita menginstall Kubernetes di datacenter sendiri, kita juga bisa menginstall web user interface untuk manage object di Kubernetes, namanya adalah Kubernetes Dashboard.
+Kubernetes Dashboard adalah aplikasi opensource yang digunakan untuk manage object di Kubernetes menggunakan web.
+
+##enable Kubernetes Dashboard di Minikube
+minikube addons enable dashboard
+
+##check Namespace kubernetes-dashboard di Minikube
+kubectl get all --namespace kubernetes-dashboard
+
+##akses Kubernetes Dashboard di Minikube
+minikube dashboard
+

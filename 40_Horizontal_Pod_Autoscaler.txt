@@ -1,0 +1,58 @@
+### HORIZONTAL POD AUTOSCALER ###
+
+Application Scaling
+Saat aplikasi kita sedang sibuk, sehingga konsumsi memory atau cpu tinggi, maka ada kemungkinan performa aplikasi kita akan turun. Saat hal ini terjadi, application scaling sangat dibutuhkan.
+Secara garis besar, ada 2 jenis application scaling:
+•   Vertical Scaling.
+    Vertical Scaling adalah cara application scaling dengan cara mengupgrade computational resource di aplikasi kita.
+    Misal dari 1 cpu menjadi 2 cpu, karena resource Node yang tersedia hanya 2 cpu. Dari 1GB memory menjadi 2GB memory, karena resource Node yang tersedia hanya 2GB. 
+    Namun permasalahan Vertical Scaling adalah akan ada batasnya. Pod di kubernetes tidak bisa menggunakan resource melebihi resource Node yang ada.
+    Update resource = nambah biaya sewa server.
+
+•   Horizontal Scaling.
+    Horizontal Scaling adalah application scaling dengan cara membuat Pod baru agar beban pekerjaan bisa didistribusikan ke Pod baru tersebut.
+    Scalability terbaik harusnya dicapai dengan Horizontal Scaling, karena dengan Horizontal Scaling, kita tidak butuh upgrade Node dengan resource yang lebih tinggi.
+
+Jenis-jennis auto Autoscaler pada Kubernetes:
+•   Vertical Pod Autoscaler.
+    Vertical Pod Autoscaler adalah kemampuan secara otomatis application scaling secara Vertical dengan cara mengupgrade resource Pod dan menurunkan secara otomatis jika diperlukan.
+    Saat ini, fitur ini masih dalam tahap development. Namun kita bisa memantau fitur ini di halaman github kubernetes : https://github.com/kubernetes/autoscaler/tree/master/vertical-pod-autoscaler
+    Fitur sudah bisa dicoba di beberapa Cloud Provider seperti Google Cloud dan Amazon Web Service.
+      - https://cloud.google.com/kubernetes-engine/docs/concepts/verticalpodautoscaler
+      - https://docs.aws.amazon.com/eks/latest/userguide/vertical-pod-autoscaler.html
+
+•   Horizontal Pod Autoscaler.
+    Horizontal Pod Autoscaler adalah kemampuan secara otomatis application scaling secara Horizontal dengan cara menambah Pod baru dan menurunkan secara otomatis jika diperlukan.
+    Horizontal Pod Autoscaler atau disingkat HPA, merupakan object di Kubernetes. Sehingga kita bisa bebas membuat HPA dan menghapusnya jika sudah tidak diperlukan.
+    HPA bekerja dengan cara mendengarkan data metrics dari setiap Pod, dan jika sudah mencapai batas tertentu, HPA akan akan melakukan auto scaling (baik itu menaikkan Pod atau menurunkan jumlah Pod).
+    
+    ##Metrics Server  
+    Metrics Server merupakan sevice yang memonitoring Pod yang sedang berjalan. 
+    Jika Pod yang dibuat dirasa terlalu berat trafiicnya, maka Metrics Server akan melaporkan ke service Horizontal Pod Autoscaler untuk meminta dibuatkan Pod baru. 
+    
+    #Metrics Server di Minikube 
+    Jika menggunakan Minikube, perlu di-enable secara manual terlebih dahulu Metrics Server-nya.
+
+    minikube addons enable metrics-server
+
+    #check Namespace kube-system di Minikube
+    kubectl get add pod --namespace kube-system
+
+    ##membuat Horizontal Pod Autoscaler
+    @file ada di Templates/40_Horizontal Pod Autoscaler/horizontal-pod-autoscaler.yaml
+    
+    kubectl apply
+    
+    ##melihat Horizontal Pod Autoscaler
+    kubectl get hpa
+
+    ##melihat detail lengkap suatu Horizontal Pod Autoscaler
+    kubectl describe hpa namahpa
+
+
+    ##menghapus Horizontal Pod Autoscaler
+    kubectl delete hpa namahpa   
+
+
+
+

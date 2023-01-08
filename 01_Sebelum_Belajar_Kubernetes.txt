@@ -1,0 +1,18 @@
+### SEBELUM BELAJAR KUBERNETES ###
+
+1. Dari Monolith ke Microservices. 
+  •    Apa itu Monolith? 
+       Saat kita membuat sebuah aplikasi, dan semua fitur dibuat dalam aplikasi tersebut, maka aplikasi tersebut bisa dibilang Monolith.
+
+   •   Apa itu Microservices? 
+       Microservices adalah kebalikannya dari Monolith, dimana aplikasi dipecah menjadi kecil-kecil, dimana tiap aplikasi hanya mengurus satu tugas dengan baik, dan semua aplikasi saling berkomunikasi.
+
+2. Dari Virtual Machine ke Container.
+
+3. Scaling Microservices Menggunakan Container.
+
+4. Docker Deployment.
+   Kubernetes mendukung beberapa Container Manager.
+   Namun yang saat ini sangat populer adalah Docker.
+
+

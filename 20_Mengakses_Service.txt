@@ -1,0 +1,39 @@
+### MENGAKSES SERVICE ###
+
+Bagaimana Cara Mengakses Service?
+
+Seandainya aplikasi di Pod butuh mengaskses Pod lain via Service, bagaimana cara mengetahui Ip Address Service tersebut?
+Cara manual adalah dengan membuat service terlebih dahulu, lalu memasukkannya ke dalam konfigurasi aplikasinya secara manual.
+Atau adakah cara yang lebih otomatis?
+
+##mengakes Service
+•   Menggunakan environment variable.
+    
+    #mengakses Pod untuk akses Service dari dalam Cluster
+    kubectl exec namapod -it -- /bin/sh
+
+    #melihat Environment Variable
+    env
+    
+    *Cukup lihat bagian NGINX_SERVICE_SERVICE_HOST=10.100.111.98 dan NGINX_SERVICE_SERVICE_PORT=8080.
+    
+    #akses pod lain menggunakan curl
+    curl //http:10.100.111.98:8080
+
+•   Menggunakan DNS
+
+    #mengakses Pod untuk akses Service dari dalam Cluster
+    kubectl exec namapod -it -- /bin/sh
+
+    #akses pod lain menggunakan curl
+    curl http://namaservice.namanamespace.svc.cluster.local:port
+    curl http://nginx-service.kube-system.svc.cluster.local:8080
+
+
+##melihat semua Endpoint
+kubectl get endpoints
+
+*endpoint = IP address Pod yang ada di suatu Cluster 
+
+
+

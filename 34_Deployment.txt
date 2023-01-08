@@ -1,0 +1,39 @@
+### DEPLOYMENT ###
+
+Bagaimana Cara Update Aplikasi?
+
+Sekarang kita sudah tau bagaimana cara mem-package aplikasi kita di Pod, menggunakan volume, menggunakan konfigurasi ConfigMap dan Secret, mengakses Pod, dan membuat Pod bisa berkomunikasi dengan Pod lain menggunakan Service.
+Sekarang pertanyaannya, bagaimana jika kita ingin mengupdate aplikasi kita?
+
+Deployment
+
+Update aplikasi secara manual bukanlah hal bijak, kesalahan kecil yang kita lakukan saat update secara manual, bisa menyebabkan downtime. Sehingga aplikasi kita tidak bisa diakses.
+Misalnya kita menghapus Pod dulu, baru kemudian membuat Pod baru berisi aplikasi yang telah di update.
+
+Kubernetes memiliki fitur Deployment, yaitu resource untuk melakukan deployment aplikasi dan update aplikasi secara deklaratif menggunakan file konfigurasi.
+Saat kita membuat Deployment, secara otomatis Kubernetes akan membuat ReplicaSet, yang mana ReplicaSet akan secara otomatis membuat Pod.
+Membuat Deployment hampir sama seperti membuat ReplicationSet.
+
+##membuat Deployment
+@file ada Templates/34_Deployment/deployment-nodejs.yaml
+
+kubectl apply -f deployment-nodejs.yaml
+
+##melihat Deployment
+kubectl get deployment
+kubectl get deployments
+
+##melihat detail lengkap suatu Deployment
+kubectl describe deployment namadeployment
+
+##menghapus Deployment
+kubectl delete deployment namadeployment
+
+##mengupdate Deployment
+Untuk update Deployment, caranya sangat mudah, kita hanya tinggal gunakan perintah apply lagi untuk mengupdate Deployment terbaru.
+Saat Deployment terbaru dieksekusi, secara otomatis Deployment akan membuat ReplicaSet baru, lalu menyalakan Pod baru, setelah Pod siap, Deployment akan menghapus Pod lama secara otomatis.
+Ini membuat proses update berjalan seamless, dan tidak terjadi downtime.
+
+@file ada Templates/34_Deployment/deployment-nodejs-update.yaml
+
+kubectl update -f apply -f deployment-nodejs-update.yaml

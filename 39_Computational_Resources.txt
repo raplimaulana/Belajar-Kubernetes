@@ -1,0 +1,15 @@
+### COMPUTATIONAL RESOURCES ###
+Sebelumnya kita belum membahas tentang computational resources.
+Jadi saat membuat Pod, secara default kita akan menggunakan resource yang dimiliki oleh Node dimana Pod berada.
+Kadang kita ada kebutuhan membatasi jumlah resource yang digunakan oleh Pod.
+Hal ini dilakukan agar tidak terjadi perebutan resource antar Pod.
+Jangan sampai jika ada Pod yang sibuk, membuat semua Pod di Node yang sama menjadi lambat karena resource nya terpakai penuh oleh Pod yang sibuk.
+
+Request dan Limit
+
+Request dan Limit adalah mekanisme Kubernetes untuk mengontrol mekanisme penggunaan Memory dan CPU.
+Request adalah apa yang container digaransi didapatkan. Jika sebuah container me-request resource, maka Kubernetes hanya akan menjalankan di Node yang memiliki resource tersebut.
+Sedangkan Limit adalah untuk memastikan bahwa container tidak akan pernah melewati resource tersebut. Container hanya boleh menggunakan resource sampai Limit, tidak boleh lebih.
+
+@file ada di Templates/39_Computational Resources/pod-with-resources.yaml
+

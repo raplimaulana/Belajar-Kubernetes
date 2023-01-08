@@ -1,0 +1,50 @@
+##membuat configmap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nodejs-env-config
+data: 
+  APPLICATION: My Cool Aplication
+  VERSION: 1.0.0
+
+---
+
+##membuat pod
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: nodejs-env
+spec:
+  replicas: 3
+  selector:
+    matchLabels: 
+      name: nodejs-env                   #pastikan matchLabels HARUS SAMA dengan label-template
+  template: 
+    metadata:
+      name: nodejs-env
+      labels:   
+        name: nodejs-env                 #label-template (label pod) haru sama dengan matchLabels dan label service
+    spec:
+      containers:
+        - name: nodejs-env
+          image: khannedy/nodejs-env
+          ports: 
+            - containerPort: 3000
+          envFrom:
+            - configMapRef:
+                name: nodejs-env-config      #nama configmap yang telah dibuat
+
+---
+
+apiVersion: v1
+kind: Service
+metadata: 
+  name: nodejs-env-service
+spec:
+  type: NodePort
+  selector: 
+    name: nodejs-env                         #label service harus sama dengan label-template (label pod)
+  ports:
+    - port: 3000                             #port yang digunakan oleh cluster lain (dalam satu server kubernetes) untuk mengakses aplikasi tersebut
+      targetPort: 3000                       #port aplikasi yang ada di server
+      nodePort: 30001                        #port yang digunakan oleh client untuk mengakses aplikasi tersebut

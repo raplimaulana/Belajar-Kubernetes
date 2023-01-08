@@ -1,0 +1,10 @@
+### CARA MENGINSTALL KUBERNETES ###
+
+##cara menginstall Kubernetes di local
+•   Menggunakan Docker Desktop.
+•   Menggunakan Minikube (butuh VirtualBox atau Hyper-V).
+    https://github.com/kubernetes/minikube
+•   Menginstall Kubectl
+    https://kubernetes.io/docs/tasks/tools/install-kubectl/
+
+

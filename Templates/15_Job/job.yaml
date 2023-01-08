@@ -1,0 +1,23 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: nodejs-job                            #job-name
+  #labels:
+    #label: label
+spec:
+  completions: 5                              #berapa banyak job yang harus dijalankan sampai job-nya dianggap selesai. Misal melakukan 5 kali job, baru Pod-nya berhenti 
+  parallelism: 2                              #berapa banyak pod yang berjalan pada satu waktu. Misal pada satu waktu akan ada 2 Pod yang berjalan. Jika sebelumnya dipilih completions: 5, maka Pod akan dijalankan petama kali 2 Pod dulu, 2 Pod kemudian dan terakhir 1 Pod   
+  #selector:
+    #matchLabels:                             #pastikan matchExpressions HARUS SAMA dengan label-template
+      #label: label
+  template:
+    #metadata:
+      #name:                                   #pod-name
+      #label:                                  #label-template
+    spec:
+      restartPolicy: Never                     #wajib Never agar tidak melakukan restart setelah job selesai
+      containers:
+        - name: nodejs-job                     #container-name
+          image: khannedy/nodejs-job           #image-name
+          #ports:
+            #- containerPort: 80

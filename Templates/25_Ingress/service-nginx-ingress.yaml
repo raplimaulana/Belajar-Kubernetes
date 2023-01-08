@@ -1,0 +1,63 @@
+##membuat pod
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata: 
+  name: nginx                   
+spec:
+  replicas: 3
+  selector: 
+    matchLabels: 
+      name: nginx                       #pastikan matchLabels HARUS SAMA dengan label-template
+  template: 
+    metadata: 
+      labels:
+        name: nginx                     #label-template (label pod) haru sama dengan matchLabels dan label service
+    spec: 
+      containers:
+        - name: nginx
+          image: nginx
+          ports: 
+            - containerPort: 80
+
+---
+
+##membuat service ClusterIP
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service       
+spec:
+  selector:
+    name: nginx                          #label service harus sama dengan label-template (label pod)
+  ports:
+    - port: 80                           #port yang digunakan oleh cluster lain (dalam satu server kubernetes) untuk mengakses aplikasi tersebut
+      targetPort: 80                     #port aplikasi yang ada di server
+
+---
+
+##membuat ingress
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-ingress
+  labels:
+    name: nginx-ingress
+spec:
+  rules:
+    - host: nginx.raplima.local
+      http:
+        paths:
+          - path: /                          #setiap akses web, semuanya akan di forward ke service ini. Misal raplima.com/checkout, raplima.com/account, dll.
+            pathType: Prefix
+            backend:
+              service:
+                name: nginx-service          #nama service yang dibuat untuk mengakses pod yang ada di cluster kubernetes
+                port:
+                  number: 80
+          #- path: /service2
+            #pathType: Prefix
+            #backend:
+              #service:
+                #name: nginx-service2          #nama service yang dibuat untuk mengakses pod yang ada di cluster kubernetes
+                #port:
+                  #number: 80

@@ -1,0 +1,52 @@
+### INGRES ###
+
+Masalah Saat Mengekspos Service:
+•   Jika menggunakan NodePort.
+    - Semua Node harus terekspos ke public.
+    - Cient harus tau semua ip address semua Node.
+
+•   Jika menggunakan LoadBalancer.
+    - Maka semua LoadBalancer harus terekspos ke public.
+    - Client harus tau semua ip address semua LoadBalancer.
+
+Apa itu Ingress?
+
+Ingress adalah salah satu cara yang bisa digunakan untuk mengekspos Service.
+Berbeda dengan LoadBalancer atau NodePort, jika menggunakan Ingress, client hanya butuh tahu satu lokasi ip adddress Ingress.
+Ketika client melakukan request ke Ingress, pemilihan service nya ditentukan menggunakan hostname dari request. Misal tokohidayat.com/checkout dan tokohidayat.com/cart.
+Ingress hanya mendukung protocol HTTP.
+
+##menjalankan Ingress di Minikube
+minikube addons list                     #melihat list addons yang tersedia
+minikube addons enable ingress           #jika Ingress tersedia namun disable
+
+& check dengan kubectl get pods --namespace kube-system
+
+##membuat Ingress
+@file ada Templates/25_Ingress/service-with-ingress.yaml
+@file ada Templates/25_Ingress/service-with-ingress.yaml
+
+kubectl create -f service-nginx-ingress.yaml
+
+##melihat Ingress
+kubectl get ingress
+kubectl get ingresses
+
+##menghapus Ingress
+kubectl delete ingress namaingress
+
+##melihat IP address Minikube
+minikube ip
+
+##setting Host (edit sistem operasi host file) 
+vim /etc/hosts
+
+#ipminikube yoursub.domain.com 
+192.168.99.104 nginx.raplima.local
+
+##akses lewat browser
+nginx.raplima.local
+
+
+
+

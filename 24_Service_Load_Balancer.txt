@@ -1,0 +1,15 @@
+### SERVICE LOAD BALANCER ###
+Cloud Provider seperti Google Cloud atau Amazon Web Service biasanya memiliki Cloud LoadBalancer.
+Kubernetes bisa menggunakan LoadBalancer bawaan dari Cloud Provider sebagai cara untuk mengekspos Service.
+LoadBalancer akan melakukan load balance request ke NodePort.
+Sayangnya Service LoadBalancer ini tidak bisa di test di local seperti menggunakan Minikube.
+Cara membuat Service Load Balancer = membuat Service Node Port + Service Load Balancer. Tapi secara otomatis Service Node Port akan dibuat jika menggunakan Service Load Balancer.
+
+##membuat Service Node Port
+@file ada Templates/24_Service Load Balancer/service-with-loadbalancer.yaml
+@file ada Templates/24_Service Load Balancer/service-nginx-loadbalancer.yaml
+
+kubectl create -f service-with-loadbalancer.yml
+
+
+

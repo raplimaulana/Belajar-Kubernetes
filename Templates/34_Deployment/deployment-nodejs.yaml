@@ -1,0 +1,39 @@
+##membuat pod
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: nodejs-web                              #deployment-name
+  labels:
+    name: nodejs-web
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      name: nodejs-web                          #pastikan matchLabels HARUS SAMA dengan label-template  
+  template:
+    metadata:
+      name: nodejs-web                          #pod-name
+      labels:
+        name: nodejs-web                        #label-template (label pod) haru sama dengan matchLabels dan label service
+    spec: 
+      containers:
+        - name: nodejs-web                      #container-name
+          image: khannedy/nodejs-web:1          #image-name
+          ports:
+            - containerPort: 3000   
+
+---
+
+##membuat service
+apiVersion: v1
+kind: Service
+metadata:
+  name: nodejs-web-service
+spec:
+  type: NodePort
+  selector:
+    name: nodejs-web                            #label service harus sama dengan label-template (label pod)
+  ports:
+    - port: 3000                                #port yang digunakan oleh cluster lain (dalam satu server kubernetes) untuk mengakses aplikasi tersebu
+      targetPort: 3000                          #port aplikasi yang ada di server
+      nodePort: 30001                           #port yang digunakan oleh client untuk mengakses aplikasi tersebut

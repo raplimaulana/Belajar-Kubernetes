@@ -1,0 +1,44 @@
+### POD ###
+Pod adalah unit terkecil yang bisa di deploy di Kubernetes Cluster.
+Pod berisi satu atau lebih container.
+Secara sederhana Pod adalah aplikasi kita yang running di Kubernetes Cluster. 
+Pod tidak bisa berjalan di dua Node yang berbeda. Karena itu, contain yang dijalankan pasti akan berada pada satu Node yang sama. 
+
+Kenapa butuh Pod?
+Kenapa tidak langsung menggunakan Container? 
+Jika langsung menggunakan container, yang bisa digunakan hanya docker saja. Siapa tahu nanti ada teknologi terbaru yang lebih baik selain docker.
+
+Kenapa dalam Pod bisa menjalankan lebih dari satu Container?
+Memudahkan pada proses scalling
+
+##melihat semua Pod
+kubectl get po
+kubectl get pod
+kubectl get pods
+kubectl get pods -o wide
+
+##melihat detail sebuah Pod
+kubectl describe pod namapod
+
+##membuat Pod
+@file ada di Templates/05_Pod/pod.yaml
+
+kubectl create -f pod.yaml
+
+##tes akses ke Pod
+kubectl port-forward namapod portakses:portpod
+kubectl port-forward nginx 8888:80
+
+##menghapus Pod
+kubectl delete pod nginx
+kubectl delete pod nginx nginx-with-label
+
+##menghapus Pod menggunakan Label
+kubectl delete pod -l key=value
+kubectl delete pod -l environment=production
+
+##menghapus Pod di Namespace tertentu
+kubectl delete pod nginx --namespace finance          #finance = nama namespace
+
+##menghapus semua Pod di Namespace
+kubectl delete pod --all --namespace finance          

@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: nginx-rc                        #nama-replication-controller
+spec:
+  replicas: 3
+  selector:
+    app: nginx                          #pastikan label selector HARUS SAMA dengan label-template
+  template:
+    metadata:
+      name: nginx                       #nama-pod
+      labels:
+        app: nginx                       #label-template
+    spec: 
+      containers:
+        - name: nginx                   #container-name
+          image: nginx                  #image-name
+          ports: 
+            - containerPort: 80

@@ -1,0 +1,33 @@
+### LABEL ###
+
+Kenapa butuh Label?
+•   Untuk memberi tanda pada Pod.
+•   Untuk mengorganisir Pod.
+•   Memberi informasi tambahan pada Pod.
+•   Label tidak hanya bisa digunakan pada Pod, tapi pada semua resource di Kubernetes, seperti Replication Controller, Replica Set, Service, dan lain-lain.
+
+##membuat Pod dengan menambahkan Label
+@file ada di Templates/05_Label/pod-with-label.yaml
+
+kubectl create -f pod-with-label.yaml
+
+##melihat Pod beserta Labelnya
+kubectl get pod --show-labels
+
+##mengubah Label di Pod                                *tidak disarankan, lebih baik mengubah di dalam configuration file saja
+#menambah Label di Pod yang sudah di tersedia
+kubectl label pod namapod key=value
+kubectl label pod nginx environment=development 
+
+#mengubah Label
+kubectl label pod namepod key=value --overwrite
+kubectl label pod nginx environment=qa --overwrite
+
+##mencari Pod dengan Label
+kubectl get pod -l environment
+kubectl get pod -l environment=qa
+kubectl get pod -l environmen=qa, team=finance
+kubectl get pos -l environment!=qa
+kubectl get pod -l '!environment'                              
+kubectl get pod -l 'environment in (production, development)'
+kubectl get pod -l 'environmen notin (production, development)'

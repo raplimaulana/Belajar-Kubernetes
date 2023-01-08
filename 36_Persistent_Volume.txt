@@ -1,0 +1,35 @@
+### PERSISTENT VOLUME ###
+Walaupun namanya Persistent Volume, bukan berarti Volume-Volume sebelumnya tidak persistent atau akan hilang. Ini hanya penamaan saja.
+Persistent Volume sebenarnya hampir mirip dengan Volume, hanya saja cara kerjanya berbeda.
+Cara pembuatan Persistent Volume sedikit lebih ribet dibanding Volume, namun ada beberapa benefit yang bisa didapat jika menggunakan Persistent Volume.
+
+Jenis-Jenis Persistence Volume:
+•   HostPath, berkas disimpan di Node, tidak direkomendasikan di production, hanya untuk testing.
+•   GCEPersistentDisk, Google Cloud Persistence Disk.
+•   AWSElasticBlockStore, Amazon Web Service Persistence Disk.
+•   AzureFile / AzureDisk, Microsoft Azure Persistence Disk.
+•   Dan lain-lain.
+
+Tahapan Persistent Volume
+1. Membuat Persistent Volume.
+2. Membuat Persistent Volume Claim.
+3. Menambahkan Persistent Volume Claim ke Pod.
+
+##membuat Persistent Volume / Claim
+@file ada di Templates/36_Persistent Volume/persistent-volume.yaml
+
+kubectl create -f persisten-volume.yaml
+
+##melihat Persistent Volume / Claim
+kubectl get pv                        #Persistent Volume
+kubectl get pvc                       #Persistent Volume Claim
+
+##melihat detail lengkap suatu Persistent Volume / Claim
+kubectl describe pv namapv            #Persistent Volume 
+kubectl describe pvc namapvc          #Persistent Volume Claim
+
+##menghapus Persistent Volume / Claim
+kubectl delete pv namapv
+kubectl delete pvc namapvc
+
+

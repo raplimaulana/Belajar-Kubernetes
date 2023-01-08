@@ -1,0 +1,44 @@
+### ROLLBACK DEPLOYMENT ###
+Saat misal terjadi masalah ketika deploy aplikasi terbaru menggunakan Deployment, cara yang paling mudah agar tidak terjadi error terlalu lama adalah rollback ke Deployment sebelumnya.
+Cara manualnya bisa dilakukan dengan cara meng-update menggunakan Deployment baru, namun versi aplikasinya di set ke versi sebelumnya.
+Atau ada cara yang lebih mudah, kita bisa menggunakan fitur rollout Kubernetes untuk rollback Deployment ke versi Deployment sebelumnya.
+
+Kubernetes Rollout
+
+|-------------------------------------|-----------------------------| 
+|     Kubernetes Rollout Command      |         Keterangan          |
+|-------------------------------------|-----------------------------| 
+| kubectl rollout history object name | Melihat history rollout     |
+|-------------------------------------|-----------------------------| 
+| kubectl rollout pause object name   | Menandai sebagai pause      |
+|-------------------------------------|-----------------------------| 
+| kubectl rollout resume object name  | Resume pause                |
+|-------------------------------------|-----------------------------| 
+| kubectl rollout restart object name | Merestart rollout           |
+|-------------------------------------|-----------------------------| 
+| kubectl rollout status object name  | Melihat status rollout      |
+|-------------------------------------|-----------------------------| 
+| kubectl rollout undo object name    | Undo ke rollout sebelumnya  |
+|-------------------------------------|-----------------------------| 
+
+*object bisa diisi dengan deployment, daemonset, dan statefullset
+
+##melihat Deployment
+kubectl get deployment
+kubectl get deployments
+
+##melihat detail lengkap suatu Deployment
+kubectl describe deployment namadeployment
+
+##Rollback Deployment
+kubectl rollout undo deployment namadeployment
+
+*walaupun disebut undo, sebenarnya kubernetes menganggapnya sebagai update baru menggunakan data sebelumnya
+
+##melihat status rollout
+kubectl rollout status deployment namadeployment
+
+ 
+ 
+
+

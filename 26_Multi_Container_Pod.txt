@@ -1,0 +1,20 @@
+### MULTI CONTAINER POD ###
+Saat menggunakan Docker, kita selalu diajarkan bahwa 1 aplikasi adalah 1 container.
+Di Kubernetes agak sedikit berbeda, saat kita deploy aplikasi kita, maka dia akan disimpan dalam 1 pod. Kenapa pod? tidak container, karena sebenarnya di dalam pod, kita bisa menambahkan banyak container.
+Ini cocok sekali jika memang kita butuh aplikasi yang berjalan dibeberapa container, dan jika ingin scale, harus semua nya ikut scale.
+Perlu diingat bahwa pada saat membuat Pod dengan banyak Container, Container tersebut akan memiliki IP yang sama, sehingga hati-hati dalam membuat port-nya agar tidak bertabrakan.
+
+##membuat Multi Container Pod
+@file ada Templates/26_Multi Container Pod/multi-container-pod.yaml
+
+kubectcl create -f multi-container-pod.yaml
+
+##melihat Service
+kubectl get service
+
+##mengakses Pod untuk akses Service dari dalam Cluster
+kubectl exec namapod -it -- /bin/sh
+
+curl http://cluster-ip:port/
+curl http://10.105.4.39:8080           #port nginx
+curl http://10.105.4.39:3000           #port nodejs-web

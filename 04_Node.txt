@@ -1,0 +1,11 @@
+### NODE ###
+Node adalah worker machine di Kubernetes, sebelumnya ada yang menyebutnya Minion.
+Node bisa saja dalam bentuk VM atau Mesin Fisik.
+Di dalam Node selalu terdapat kubelet, kube-proxy dan container manager.
+
+##melihat semua Node
+kubectl get node
+
+##melihat detail sebuah Node 
+kubectl describe node namanode
+kubectl describe node docker-desktop

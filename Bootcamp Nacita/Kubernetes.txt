@@ -1,0 +1,262 @@
+###Kubernetes###
+##Pastikan IP UP, Gateway, DNS Resolver, Hostname Sesuai
+
+#Node namauserX-master
+Interface: ens3
+IP Address: 10.X.X.A/24
+Gateway: 10.X.X.1
+Hostname: namauserX-master
+
+#Node namauserX-worker0
+Interface: ens3
+IP Address: 10.X.X.B/24
+Gateway: 10.X.X.1
+Hostname: namauserX-worker0
+
+#Node namauserX-worker1
+Interface: ens3
+IP Address: 10.X.X.C/24
+Gateway: 10.X.X.1
+Hostname: namauserX-worker1
+
+##Eksekusi disemua node
+#Verifikasi hostname
+namauserX-master : namauserX-master namauserX-worker0 : namauserX-worker0 namauserX-worker1 : namauserX-worker1
+
+##Verifikasi alamat ip
+ip address
+
+##Edit name resolution
+sudo vim /etc/hosts
+.....
+10.X.X.A namauserX-master
+10.X.X.B namauserX-worker0
+10.X.X.C namauserX-worker1
+
+##Verifikasi konektivitas
+ping -c 3 namauserX-master
+ping -c 3 namauserX-worker0
+ping -c 3 namauserX-worker1
+
+##Generate ssh keypair
+ssh-keygen -t rsa
+<Enter>, <Enter>, <Enter>
+
+##Copy public key ke tiap node
+ssh-copy-id student@10.X.X.A
+ssh-copy-id student@10.X.X.B
+ssh-copy-id student@10.X.X.C
+
+###
+##Eksekusi di master
+#Install paket yang diperlukan
+sudo apt install git python3-pip
+
+#Clone repository kubespray
+git clone https://github.com/kubernetes-sigs/kubespray.git
+cd kubespray
+
+#Buat environment phyton supaya versinya sama semua
+#Buat environment
+phyton3 -m venv .venv
+#Masuk ke environment
+. ./.venv/bin/activate / source ./.venv/bin/activate
+#Cek versi aplikasi yang diinstall
+ls .venv/
+
+#Install dependencies from requirements.txt
+sudo pip3 install -r requirements.txt
+
+#Copy inventory/sample as inventory/mycluster
+cp -rfp inventory/sample inventory/mycluster
+
+#Update Ansible inventory file with inventory builder
+declare -a IPS=(10.10.1.3 10.10.1.4 10.10.1.5)
+CONFIG_FILE=inventory/mycluster/hosts.yaml python3 contrib/inventory_builder/inventory.py ${IPS[@]}
+
+#Review and change parameters under inventory/mycluster/group_vars
+cat inventory/mycluster/group_vars/all/all.yml
+cat inventory/mycluster/group_vars/k8s_cluster/k8s-cluster.yml
+
+#Deploy Kubespray with Ansible Playbook - run the playbook as root
+#The option --become is required, as for example writing SSL keys in /etc/,
+#installing packages and interacting with various systemd daemons.
+#Without --become the playbook will fail to run!
+ansible-playbook -i inventory/mycluster/hosts.yaml --become --become-user=root cluster.yml
+
+#Copy konfigurasi admin.conf
+mkdir ~/.kube
+sudo cp /etc/kubernetes/admin.conf ~/.kube/config
+Load sebagai variable KUBECONFIG
+export KUBECONFIG=~/.kube/config
+
+#Deploy image nginx
+kubectl create deployment nginx --image=nginx
+#jija error beri access permission user
+sudo chown student:student /home/student/.kube/config
+kubectl get deployment
+kubectl get pods -l app=nginx
+
+#cek node yang tersambung
+kubectl get node
+
+#melihat pods yg berjalan
+kubectl get pods --all-namespaces
+
+#melihat deskripsi deployment tertentu
+kubectl describe deployment nginx
+
+#melihat lokasi pod dimana 
+kubectl get pod -o wide
+
+#Buat port forward agar dapat diakses dari host
+#port forward manual
+POD_NAME=$(kubectl get pods -l app=nginx -o jsonpath="{.items[0].metadata.name}")
+kubectl port-forward $POD_NAME 8080:80
+
+#port forward otomatis (expose deployment dengan NodePort)
+kubectl expose deployment nginx --port 80 --type NodePort
+NODE_PORT=$(kubectl get svc nginx --output=jsonpath='{range .spec.ports[0]}{.nodePort}')
+EXTERNAL_IP_HOST=$(hostname -I | awk '{print $1}')
+#cek port yang terbuka untuk tunneling
+echo ${NODE_PORT} / kubectl get service
+
+#Buka terminal lain, lalu akses dengan curl
+curl --head http://127.0.0.1:8080
+
+#Kembali ke terminal sebelumnya, inspeksi log dari pod
+kubectl logs $POD_NAME *misal output 31253
+
+#tunneling ke port bebas, terus coba akses melalui website
+http://10.17.10.52:31253/
+http://10.17.10.250:31253/
+http://10.17.10.17:31253/
+
+#Jalankan perintah exec
+kubectl exec -ti $POD_NAME -- nginx -v
+
+#Verifikasi dengan curl
+curl -I http://${EXTERNAL_IP_HOST}:${NODE_PORT}
+
+#LocalDNS
+#Namespace berisi banyak deployment, gunanya untuk memudahkan merubah beberapa deployment secara bersamaan. Biasanya satu aplikasi.
+kubectl create namespace dev
+#cek semua namespace yang tersedia
+kubectl get namespace
+kubectl create deployment nginx --image=nginx -n dev
+kubectl expose deployment nginx --port 80 --type ClusterIP -n dev
+
+#Jalankan container sementara untuk mengakses service tersebut dari namespace default
+kubectl run curly -it --rm --image curlimages/curl:7.70.0 -- /bin/sh
+
+#Verivikasi dengan eksekusi perintah berikut di dalam container, lalu exit
+curl --head http://nginx.dev:80 #http://nginx = nama label deployment, dev= nama name space 
+exit
+
+#Pembersihan
+kubectl delete namespace dev
+kubectl delete deployment nginx
+kubectl delete svc/nginx
+
+##Kubernetes UI
+kubectl -n kubernetes-dashboard edit service kubernetes-dashboard
+Ganti `type: ClusterIP` menjadi `type: NodePort`
+#Cek Port
+kubectl -n kubernetes-dashboard describe service kubernetes-dashboard
+#Akses
+https://10.17.10.52:30072 *gunakan NodePort, bukan TargetPort
+#Atau pake cara ini https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/
+
+#### Buat manifest untuk user admin ###
+vim admin-user.yaml
+
+```
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: admin-user
+  namespace: kubernetes-dashboard
+```
+
+#### Buat user dengan kubectl ####
+kubectl apply -f admin-user.yaml
+
+#### Buat manifest untuk user role ####
+vim cluster-role.yaml
+
+```
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: admin-user
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- kind: ServiceAccount
+  name: admin-user
+  namespace: kubernetes-dashboard
+```
+kubectl apply -f admin-user.yaml
+
+#Dapatkan token admin, copy di browser waktu login
+kubectl create token admin-user -n kubernetes-dashboard
+
+#Akses
+https://10.17.10.52:30072 *gunakan NodePort, bukan TargetPort
+
+
+
+##########################################################################################
+
+#Biar bisa buat deployment di master
+https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/#control-plane-node-isolation
+
+#Kubernetes UI
+https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/
+
+kubectl -n kubernetes-dashboard edit service kubernetes-dashboard
+Ganti `type: ClusterIP` menjadi `type: NodePort`
+
+Cek Port
+kubectl -n kubernetes-dashboard describe service kubernetes-dashboard
+
+
+#Bikin User
+#### Buat manifest untuk user admin ###
+vim admin-user.yaml
+
+```
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: admin-user
+  namespace: kubernetes-dashboard
+```
+
+#### Buat user dengan kubectl ####
+kubectl apply -f admin-user.yaml
+
+#### Buat manifest untuk user role ####
+
+vim cluster-role.yaml
+
+```
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: admin-user
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- kind: ServiceAccount
+  name: admin-user
+  namespace: kubernetes-dashboard
+```
+Dapatkan token admin
+kubectl create token admin-user -n kubernetes-dashboard
+
+https://gist.github.com/lanuma/7d0f681709be7ba2e63b266640db6889

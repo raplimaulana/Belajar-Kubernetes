@@ -1,0 +1,23 @@
+### ANNOTATION ###
+
+Untuk Apa Annotation?
+Annotation mirip dengan Label, hanya saja tidak dapat di filter seperti label.
+Biasanya Annotation digunakan untuk menambahkan informasi tambahan dalam ukuran besar.
+Annotation bisa menampung informasi sampai 256kb.
+Pada Annotation diperbolehkan menggunakan spasi.
+
+##membuat Pod dengan menambahkan Annotation
+@file ada di Templates/06_Annotation/pod-with-annotation.yaml
+
+kubectl create -f pod-with-annotation.yaml 
+
+##mengubah Annotation
+#menambahkan Annotation ke Pod yang sudah tersedia
+kubectl annotate pod namapod key=value
+kubectl annotate pod nginx description="Ini adalah aplikasi tim finance"
+
+#mengubah Annotation
+kubectl annotate pod namapod key=value --overwrite
+kubectl annotate pod nginx description="Ini adalah aplikasi team finance"
+
+

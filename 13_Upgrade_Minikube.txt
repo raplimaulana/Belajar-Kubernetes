@@ -1,0 +1,15 @@
+### UPGRADE MINIKUBE ###
+
+##mengecek update Minikube
+minikube update-check
+
+##menghentikan Minikube
+minikube stop
+
+##menghapus minikube
+minikube delete
+
+##menjalankan Minikube
+minikube start
+minikube start --vm-driver=virtualbox
+minikube start --vm-driver=virtualbox --cpus=2 --memory=2g --disk-size=20g

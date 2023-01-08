@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata: 
+  name: external-service
+  labels:
+    label1: label
+spec:
+  type: ExternalName            #default namanya adalah ClusterIP
+  externalName: example.com     #domain untuk diakses lewat luar cluster, bisa juga diakses melalui browser
+  ports: 
+    - port: 80

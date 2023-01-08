@@ -1,0 +1,45 @@
+### SERVICE ###
+
+Apa itu Service?
+
+Service adalah resource di Kubernetes yang digunakan untuk membuat satu gerbang untuk mengakses satu atau lebih Pod.
+Service memiliki IP address dan Port yang tidak pernah berubah selama service itu ada.
+Client bisa mengakses service tersebut, dan secara otomatis akan meneruskan ke Pod yang ada dibelakang service tersebut.
+Dengan begini Client tidak perlu tahu lokasi tiap Pod, dan Pod bisa bertambah, berkurang, atau berpindah, tanpa harus mengganggu Client.
+
+Jika kita mengakses Pod secara langsung, di khawatirkan suatu hari ketika Pod-nya mati, Pod tersebut akan berpindah Node sedangkan kita tidak tahu dia berpindah ke Node berapa dan IP address-nya menjadi berapa.
+Oleh karena itu kita tidak perlu memikirkan hal seperti itu, jika mengakses Pod meggunakan Service.
+Setiap Pod yang di simpan di service, akan tinggal di Node tertentu secara tetap. Sehingga akan selalu memiliki alamat IP address yang sama.
+Selain itu, kita jadi tidak perlu tahu lokasi Pod berada di Node mana. Sehingga ketika akan menjalankan aplikasi, cukup dengan memanggil nama atau label-nya saja.
+
+TIDAK BOLEH POD MENGAKSES POD LAIN, KECUALI MENGGUNAKAN SERVICE !
+
+Bagaimana Menentukan Pod untuk Service?
+Bagaimana Service tahu Pod mana yang ingin dia tuju?
+
+Service akan mendistribusikan trafik ke Pod yang ada di belakangnya secara seimbang.
+Service akan menggunakan label selector untuk mengetahui Pod mana yang ada dibelakang service tersebut.
+
+##membuat Service
+@file ada di Templates/19_Service/service.yaml
+@file ada di Templates/19_Service/service-nginx.yaml
+
+
+##melihat Service
+kubectl get service
+
+##menghapus Service
+kubectl delete service namaservice
+
+##mengakses Pod untuk akses Service dari dalam Cluster
+kubectl exec namapod -it -- /bin/sh
+
+curl http://cluster-ip:port/
+curl http://10.105.4.39:8080
+
+*Cluster adalah grup yang berisi beberapa Node untuk menjalankan aplikasi tertentu.
+ ketika membuat Service di kubernetes, secara otomatis akan diberikan IP di dalam cluster kubernetes-nya dan port.
+ IP address ini hanya bisa diakses di dalam cluster kubernetes-nya.
+
+
+

@@ -1,0 +1,40 @@
+### PROBE ###
+Materi selanjutnya akan fokus pada Replication Controller dan Replica Set.
+Namun, sebelum kita bahas materi selanjutnya, kita harus mengerti tentang liveness, readiness, dan startup probe di Kubernetes.
+
+Liveness , Readiness, Startup Probe
+•   Kubelet menggunakan liveness probe untuk mengecek kapan perlu me-restart Pod.
+    Misal saat liveness probe pada Pod tidak merespon kubelet akan secara otomatis me-restart Pod.
+
+•   Kubelet menggunakan readiness probe untuk mengecek apakah Pod siap menerima traffic.
+    Ketika mendapat respon tidak sehat dari aplikasi kita, Pod akan di stop untuk menerima traffic.
+    Akan menerima traffic setelah Pod sehat kembali.
+
+•   Kubelet menggunakan startup probe untuk mengecek apakah Pod sudah berjalan, Jika belum berjalan, maka kubelet tidak akan melakukan pengecekan liveness dan readiness. 
+    Startup probe cocok untuk Pod yang membutuhkan proses startup lama, ini dapat digunakan untuk memastikan Pod tidak mati oleh kubelet sebelum selesai berjalan dengan sempurna.
+
+Probe adalah pengecekan pada Kubernetes.
+Mekanisme Pengecekan Probe
+•   Menggunakan HTTP Get (cocok untuk web)
+•   Menggunakan TCP Socket 
+•   Menggunakan Command Exec
+
+##membuat probe
+@file ada di Templates/08_Probe/pod-with-probe.yaml
+
+kubectl create -f pod-with-probe.yaml
+
+##melihat detail Probe
+kubectl get pod
+kubectl describe pod nginx-with-probe
+
+*apabila STATUS-nya adalah CrashLoopBackOff, atinya sudah dicoba dinyalakan beberapa kali tapi selalu error
+
+##konfigurasi Probe
+•   initialDelaySeconds, waktu setelah container jalan dan dilakukan pengecekan, default nya 0.
+•   periodSeconds, seberapa sering pengecekan dilakukan, default nya 10.
+•   timeoutSeconds, waktu timeout ketika pengecekan gagal, default 1.
+•   successThreshold, minimum dianggap sukses setelah berstatus failure, default 1.
+•   failureThreshold, minimum dianggap gagal, default 3.
+
+

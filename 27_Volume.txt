@@ -1,0 +1,17 @@
+### VOLUME ###
+Berkas-berkas di dalam container itu tidak permanen, akan terhapus seiring dihapusnya Pod atau Container.
+Volume secara sederhana adalah sebuah direktori yang bisa diakses oleh container-container di Pod.
+
+Jenis-Jenis Volume:
+•   emptyDir, direktori sederhana yang kosong.
+•   hostPath, digunakan untuk men-sharing direktori di node ke pod.
+•   gitRepo, direktori yang dibuat pertama kali dengan meng-clone git repository.
+•   nfs, sharing network file system.
+•   dan lain-lain : https://kubernetes.io/id/docs/concepts/storage/volumes/#jenis-jenis-volume
+
+##membuat Volume dengan emptyDir (tidak cocok digunakan di production, karena pada saat Pod mati kemudaian hidup kembali, Volumenya akan kosong lagi)
+@file ada Templates/27_Volume/pod-with-volume.yaml
+
+kubectl create -f 
+
+

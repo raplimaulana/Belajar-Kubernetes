@@ -1,0 +1,31 @@
+### MANAGE KUBERNETES OBJECT ###
+Sebelumnya, kita sudah tau cara untuk membuat object di Kubernetes menggunakan perintah: kubectl create -f namafile.yaml.
+Sebenarnya ada perintah lain untuk melakukan management Kubernetes object, seperti mengupdate, melihat atau menghapus.
+
+•   Imperative Management
+
+|-------------------------------------------|------------------------------| 
+|                Perintah                   |          Keterangan          |
+|-------------------------------------------|------------------------------| 
+| kubectl create -f namafile.yaml           | Membuat kubernetes object    |
+|-------------------------------------------|------------------------------|
+| kubectl replace -f namafile.yaml          | Mengupdate kubernetes object |
+|-------------------------------------------|------------------------------| 
+| kubectl get -f namafile.yaml -o yaml/json | Melihat kubernetes object    |
+|-------------------------------------------|------------------------------| 
+| kubectl delete -f namafile.yaml           | Menghapus kubernetes object  |
+|-------------------------------------------|------------------------------|  
+  
+
+•   Declarative Management
+|--------------------------------|-------------------------------------------| 
+|           Perintah             |          Keterangan                       |
+|------------------------------- |-------------------------------------------| 
+| kubectl apply -f namafile.yaml | Membuat atau mengupdate kubernetes object |
+|--------------------------------|-------------------------------------------| 
+
+*Saat menggunakan declarative management, file konfigurasi akan disimpan di dalam annotations object.
+ Hal ini sangat bermanfaat saat menggunakan object Deployment (yang akan dibahas nanti).
+ Rata-rata sekarang kebanyakan Declarative Management lebih sering digunakan dibandingkan Imperative Management.
+
+

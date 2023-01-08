@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodejs-web                       
+  labels:
+    name: nodejs-web
+spec:
+  replicas: 3
+  selector: 
+    matchLabels:
+      name: nodejs-web                        #pastikan matchLabels HARUS SAMA dengan label-template
+  template: 
+    metadata: 
+      name: nodejs-web 
+      labels:
+        name: nodejs-web                      #label-template (label pod) haru sama dengan matchLabels dan label service   
+    spec:
+      containers:
+        - name: nodejs-web 
+          image: khannedy/nodejs-web 
+          ports: 
+            - containerPort: 3000
+          resources:
+            requests:
+              cpu: 1000m                       #1000m = 1000 millicore = 1 core 
+              memory: 250Mi                    #250mi = 250 mebibyte = mirip dengan 250 MB
+            limits:
+              cpu: 2000m                       #2000m = 2000 millicore = 2 core 
+              memory: 500Mi                    #500mi = 500 mebibyte = mirip dengan 500 MB
+
+---
+##membuat service
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nodejs-web-service
+spec:
+  type: NodePort
+  selector:
+    name: nodejs-web                           #label service harus sama dengan label-template (label pod)
+  ports:
+    - port: 3000                               #port yang digunakan oleh cluster lain (dalam satu server kubernetes) untuk mengakses aplikasi tersebut
+      targetPort: 3000                         #port aplikasi yang ada di server
+      nodePort: 30001                          #port yang digunakan oleh client untuk mengakses aplikasi tersebut

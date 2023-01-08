@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-with-probe              #pod-name
+spec:
+  containers:
+    - name: nginx                     #container-name
+      image: nginx                    #image-name
+      ports:
+        - containerPort: 80
+      livenessProbe:
+        httpGet:
+          path: /health
+          port: 80
+        initialDelaySeconds: 5        #saat akan ngelakukan pengecekan, kita mau menunggu terlebih dahulu sampai berapa detik
+        periodSeconds: 5              #akan dilakukan pengecekan setiap 10 detik sekali
+        timeoutSeconds: 1             #dianggap timeout atau tidak sehat jika aplikasi merespon lebih dari 1 detik
+        successThreshold: 1           #jika sebelumnya tidak sehat, akan dilakukan pengecekan kesehatan sebanyak 1 kali
+        failureThreshold: 3           #jika 3x pengecekan aplikasi masih tidak sehat, Pod akan di restart
+      #readlinessProbe:
+        #httpGet:
+          #path: /
+          #port: 80
+        #initialDelaySeconds: 0
+        #periodSeconds: 10
+        #timeoutSeconds: 1
+        #successThreshold: 1
+        #failureThreshold: 3
+      #startupProbe:
+        #httpGet: 
+          #path: /
+          #port: 80
+        #initialDelaySeconds: 0
+        #periodSeconds: 10
+        #timeoutSeconds: 1
+        #successThreshold: 1
+        #failureThreshold: 3 
+

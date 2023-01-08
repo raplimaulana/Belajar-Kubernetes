@@ -1,0 +1,13 @@
+### ALL ###
+
+##menampilkan semua resource
+kubectl get all
+
+##menampilkan semua resource di Namespace tertentu
+kubectl get all --namespace namanamespace
+
+##menghapus semua resource
+kubectl delete all --all
+
+##menghapus semua resource di Namespace tertentu
+kubectl delete all --all --namespace namanamespace

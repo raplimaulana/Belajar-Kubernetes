@@ -1,0 +1,50 @@
+##membuat 3 pod
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: nginx                       
+spec:
+  replicas: 3
+  selector:
+    matchLabels:  
+      name: nginx                    #pastikan matchLabels HARUS SAMA dengan label-template
+  template: 
+    metadata:
+      name: nginx                    #pod-name
+      labels:
+        name: nginx                  #label-template (label pod) haru sama dengan matchLabels dan label service
+    spec:
+      containers:
+        - name: nginx                #container-name
+          image: nginx
+          ports:
+            - containerPort: 80
+
+---
+
+##membuat service
+apiVersion: v1
+kind: Service
+metadata: 
+  name: nginx-service
+spec:
+  selector: 
+    name: nginx                       #label service harus sama dengan label-template (label pod)
+  ports:
+    - port: 8080                      #port yang digunakan oleh cluster lain (dalam satu server kubernetes) untuk mengakses aplikasi tersebut
+      targetPort: 80                  #port aplikasi yang ada di server
+
+
+---
+
+##membuat pod untuk mengakses 3 pod sebelumnya
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: curl
+  labels:
+    name: curl
+spec: 
+  containers: 
+    - name: curl
+      image: khannedy/nginx-curl

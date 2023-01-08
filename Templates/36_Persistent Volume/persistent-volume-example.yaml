@@ -1,0 +1,49 @@
+##membuat persistent volume
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nodejs-writer-volume                  #persistent-volume-name
+spec: 
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 5Gi
+  hostPath:                                   #bisa diganti dengan persistent volume dari provider cloud lain
+    path: /data/location
+
+---
+
+##membuat persistenr volume claim
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nodejs-writer-volume-claim             #persistent-volume-claim-name
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 1Gi 
+
+---
+
+##membuat pod
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nodejs-writer
+  labels:
+    name: nodejs-writer
+spec:
+  volumes:
+    - name: html
+      persistentVolumeClaim:
+        claimName: nodejs-writer-volume-claim      #nama persisistent volume claim yang dibuat sebelumnya
+  containers:
+    - name: nodejs-writer
+      image: khannedy/nodejs-writer
+      volumeMounts:
+        - mountPath: /app/html
+          name: html
+        
